@@ -21,6 +21,7 @@ class SephpaCreditTransfer extends Sephpa
 {
     // credit transfers versions
     const SEPA_PAIN_001_001_03 = SepaUtilities::SEPA_PAIN_001_001_03;
+	const SEPA_PAIN_001_001_03_CH02 = SepaUtilities::SEPA_PAIN_001_001_03_CH02;
     const SEPA_PAIN_001_002_03 = SepaUtilities::SEPA_PAIN_001_002_03;
     const SEPA_PAIN_001_003_03 = SepaUtilities::SEPA_PAIN_001_003_03;
 
@@ -28,6 +29,10 @@ class SephpaCreditTransfer extends Sephpa
      * @type string INITIAL_STRING_CT Initial sting for credit transfer pain.001.001.03
      */
     const INITIAL_STRING_PAIN_001_001_03 = '<?xml version="1.0" encoding="UTF-8"?><Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd"></Document>';
+    /**
+     * @type string INITIAL_STRING_CT Initial sting for credit transfer pain.001.001.03.ch.02
+     */
+    const INITIAL_STRING_PAIN_001_001_03_CH02 = '<?xml version="1.0" encoding="UTF-8"?><Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd" xsi:schemaLocation="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd pain.001.001.03.ch.02.xsd"></Document>';	
     /**
      * @type string INITIAL_STRING_CT Initial sting for credit transfer pain.001.002.03
      */
@@ -69,6 +74,11 @@ class SephpaCreditTransfer extends Sephpa
                 $this->version = self::SEPA_PAIN_001_001_03;
                 $this->paymentCollection = new PaymentCollections\SepaCreditTransfer00100103($transferInfo, $this->checkAndSanitize, $this->sanitizeFlags);
                 break;
+            case self::SEPA_PAIN_001_001_03_CH02:
+                $this->xmlInitString = self::INITIAL_STRING_PAIN_001_001_03_CH02;
+                $this->version = self::SEPA_PAIN_001_001_03_CH02;
+                $this->paymentCollection = new PaymentCollections\SepaCreditTransfer00100103ch02($transferInfo, $this->checkAndSanitize, $this->sanitizeFlags);
+                break;				
             case self::SEPA_PAIN_001_002_03:
                 $this->xmlInitString = self::INITIAL_STRING_PAIN_001_002_03;
                 $this->version = self::SEPA_PAIN_001_002_03;
