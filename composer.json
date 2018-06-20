@@ -29,8 +29,8 @@
     },
     "autoload": {
         "psr-4": {
-            "tobi76\\Sephpa\\": "src/",
-            "tobi76\\Sephpa\\PaymentCollections\\": "src/payment-collections/"
+            "AbcAeffchen\\Sephpa\\": "src/",
+            "AbcAeffchen\\Sephpa\\PaymentCollections\\": "src/payment-collections/"
         }
     }
 }
