@@ -14,6 +14,7 @@ the specifications of Electronic Banking Internet Communication Standard (EBICS)
 ## Supported file versions
 - SEPA Credit Transfer
     - pain.001.001.03
+	- pain.001.001.03.ch.02
     - pain.001.002.03
     - pain.001.003.03
 - SEPA Direct Debit
