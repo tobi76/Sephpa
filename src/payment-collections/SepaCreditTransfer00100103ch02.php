@@ -9,6 +9,7 @@
  * @author  Alexander Schickedanz <abcaeffchen@gmail.com>
  *
  * @information  https://www.six-interbank-clearing.com/dam/downloads/de/standardization/iso/swiss-recommendations/implementation-guidelines-ct.pdf
+ *               https://www.credit-suisse.com/media/assets/microsite/docs/zv-migration/pain-001-001-03-six.pdf
  */
 
 namespace AbcAeffchen\Sephpa\PaymentCollections;
@@ -126,6 +127,8 @@ class SepaCreditTransfer00100103ch02 extends SepaCreditTransferCollection
 
         $dbtrAcct = $pmtInf->addChild('DbtrAcct');
         $dbtrAcct->addChild('Id')->addChild('IBAN', $this->transferInfo['iban']);
+		if( !empty( $this->transferInfo['ccy'] ) )
+			$dbtrAcct->addChild('Ccy', $ccy);
 
         if( !empty( $this->transferInfo['bic'] ) )
             $pmtInf->addChild('DbtrAgt')->addChild('FinInstnId')
@@ -155,6 +158,10 @@ class SepaCreditTransfer00100103ch02 extends SepaCreditTransferCollection
      */
     private function generatePaymentXml(\SimpleXMLElement $cdtTrfTxInf, $payment, $ccy)
     {
+        $ccy = ( empty( $payment['ccy'] ) )
+            ? self::CCY
+            : $payment['ccy'];		
+		
         $PmtId = $cdtTrfTxInf->addChild('PmtId');
 		if ( !empty( $payment['instrId'] ) )
 			$PmtId->addChild('InstrId', $payment['instrId']);
@@ -166,8 +173,22 @@ class SepaCreditTransfer00100103ch02 extends SepaCreditTransferCollection
             $cdtTrfTxInf->addChild('CdtrAgt')->addChild('FinInstnId')
                         ->addChild('BIC', $payment['bic']);
 
-        $cdtTrfTxInf->addChild('Cdtr')->addChild('Nm', $payment['cdtr']);
+        $Cdtr = $cdtTrfTxInf->addChild('Cdtr');
+		$Cdtr->addChild('Nm', $payment['cdtr']);
         $cdtTrfTxInf->addChild('CdtrAcct')->addChild('Id')->addChild('IBAN', $payment['iban']);
+		
+		if ( !empty( $payment['adrline'] ) ) {
+				$PstlAdr = $Cdtr->addChild('PstlAdr');
+				if ( !empty( $payment['iban'] ) ) 
+					$PstlAdr->addChild('Ctry', substr( $payment['iban'], 0, 2));
+				if ( is_array($payment['adrline']) ) {
+					foreach($payment['adrline'] as $adrline)
+						$PstlAdr->addChild('AdrLine', $adrline);
+				} else {
+					$PstlAdr->addChild('AdrLine', $payment['adrline']);
+				}
+		}
+			
 
         if( isset( $payment['ultmtCdtr'] ) )
             $cdtTrfTxInf->addChild('UltmtCdtr')->addChild('Nm', $payment['ultmtCdtr']);
